@@ -10,7 +10,7 @@ version: "1.0.0"
 date-released: "2026-05-04"
 license: "MIT"
 doi: "10.5281/zenodo.20029429"
-repository-code: "https://github.com/TVOJE-MENO/NAZOV-REPOZITARA"
+repository-code: "https://github.com/matejkovacs/bankruptcy-prediction-xai-slovak-firms"
 abstract: "This repository contains reproducible empirical pipelines developed for a diploma thesis on the comparison of logistic regression, Explainable Boosting Machine and BiLSTM models for bankruptcy prediction of Slovak firms."
 keywords:
   - bankruptcy prediction
