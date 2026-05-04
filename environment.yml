@@ -1,0 +1,20 @@
+name: bankruptcy-xai
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+  - numpy
+  - pandas
+  - scipy
+  - scikit-learn
+  - statsmodels
+  - matplotlib
+  - seaborn
+  - jupyterlab
+  - ipykernel
+  - pip:
+      - optuna>=3.5
+      - interpret>=0.5
+      - shap>=0.44
+      - tensorflow>=2.15
