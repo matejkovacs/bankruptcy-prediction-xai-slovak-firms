@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20029429.svg)](https://doi.org/10.5281/zenodo.20029429)
+
 # Bankruptcy Prediction with Explainable AI
 
 This repository contains the reproducible research pipeline for a diploma thesis focused on predicting the failure of Slovak firms using three model classes:
@@ -130,3 +132,9 @@ The raw financial dataset, generated model artefacts, exported CSV files, traine
 ## Academic use
 
 This repository is intended as a reproducibility package for academic research. The models and outputs are not intended to be used as standalone financial, legal, or investment advice.
+
+## Citation
+
+If you use this repository, please cite it as:
+
+Kovacs, M. (2026). *XAI Pipelines for Bankruptcy Prediction of Slovak Firms* (Version 1.0.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.20029429
