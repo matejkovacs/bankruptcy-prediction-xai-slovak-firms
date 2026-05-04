@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use this repository, please cite it using the metadata from this file."
+type: software
+title: "XAI Pipelines for Bankruptcy Prediction of Slovak Firms"
+authors:
+  - family-names: "Kovacs"
+    given-names: "Matej"
+year: 2026
+version: "1.0.0"
+date-released: "2026-05-04"
+license: "MIT"
+doi: "10.5281/zenodo.20029429"
+repository-code: "https://github.com/TVOJE-MENO/NAZOV-REPOZITARA"
+abstract: "This repository contains reproducible empirical pipelines developed for a diploma thesis on the comparison of logistic regression, Explainable Boosting Machine and BiLSTM models for bankruptcy prediction of Slovak firms."
+keywords:
+  - bankruptcy prediction
+  - explainable artificial intelligence
+  - XAI
+  - logistic regression
+  - explainable boosting machine
+  - BiLSTM
+  - SHAP
+  - Slovak firms
