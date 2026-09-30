@@ -21,11 +21,15 @@ Review baseline: commit `1878e78f7a5216af427640e639c2c6b1b7bf138e`.
 
 ## Verification scope and remaining work
 
-The maintenance review inspected repository metadata, documentation and all four notebook sources. It did not have an executable local Python environment, source data or readable thesis text. The repository's PDF was located, but its content could not be retrieved for comparison with the attachment. No empirical performance values or thesis-page mappings were independently verified.
+The initial maintenance review inspected repository metadata, documentation and all four notebook sources. Full PDF/DOCX content could not be retrieved. Subsequently, the author supplied the abstract, Table 19 and conclusion as text. [Selected excerpts](THESIS_EXCERPTS.md) now support a [reported-results summary](RESULTS.md) and a machine-readable transcription. Headline EBM values were checked against that text, but no model training or statistical comparison was independently rerun and PDF page mappings remain unavailable.
 
 The dependency files remain broad ranges; environment compatibility and end-to-end execution remain unverified. The new automated check compiles cells without training models.
 
-Before presenting the project as a fully reproduced thesis result, add verified aggregate metrics and figures, reconcile them to thesis tables/pages and an exact run, preserve a tested environment, and resolve the evaluation questions in [METHODOLOGY.md](METHODOLOGY.md).
+Before presenting the project as a fully reproduced thesis result, complete the numerical comparison with Logit/BiLSTM values, sample sizes, Brier scores and uncertainty estimates; add original result figures; reconcile them to thesis tables/pages and an exact run; preserve a tested environment; and resolve the evaluation questions in [METHODOLOGY.md](METHODOLOGY.md).
+
+The initial maintenance commit passed the [GitHub notebook checks](https://github.com/matejkovacs/bankruptcy-prediction-xai-slovak-firms/actions/runs/36759038332): four notebooks and 76 code cells, with cleared outputs. This is static validation, not numerical reproduction.
+
+The author-supplied Table 19 describes an EBM five-seed ensemble. The code instead uses five refits for feature-stability analysis and a separate final EBM for predictions. The results page explicitly distinguishes these.
 
 ## GitHub presentation settings
 

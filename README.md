@@ -2,7 +2,7 @@
 
 **An empirical comparison of econometric, interpretable machine-learning and deep-learning approaches on Slovak firm data.**
 
-[Read the thesis](Diplomova_praca.pdf) · [Explore the notebooks](notebooks/README.md) · [Reproduce the workflow](docs/REPRODUCIBILITY.md) · [Slovenský prehľad](docs/PREHLAD_SK.md)
+[Key results](docs/RESULTS.md) · [Read the thesis](Diplomova_praca.pdf) · [Explore the notebooks](notebooks/README.md) · [Reproduce the workflow](docs/REPRODUCIBILITY.md) · [Slovenský prehľad](docs/PREHLAD_SK.md)
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20029429.svg)](https://doi.org/10.5281/zenodo.20029429)
 [![Code license: MIT](https://img.shields.io/badge/code_license-MIT-blue.svg)](LICENSE)
@@ -13,13 +13,32 @@ How do logistic regression, an Explainable Boosting Machine (EBM), and a bidirec
 
 This diploma-thesis project connects financial feature engineering, rare-event classification, chronological evaluation, probability calibration, and model interpretation. It examines both predictive ranking and how a model's predictions can be explained.
 
-**Author:** Matej Kovacs · **Institution:** University of Economics in Bratislava (EUBA) · **Year:** 2026
+**Author:** Matej Kovács · **Institution:** University of Economics in Bratislava (EUBA), Faculty of National Economy, Department of Finance · **Year:** 2026
+
+**Thesis:** *Metódy vysvetliteľnej umelej inteligencie v modelovaní zlyhania firiem na Slovensku*  
+**Supervisor:** doc. Mgr. Marek Káčer, PhD.
+
+## Key results from the thesis
+
+**EBM captures 52.6% of future failures in the highest-risk 5% of the ranked population.** The thesis identifies it as the best overall balance of predictive performance and interpretability among the three approaches studied.
+
+| EBM metric | Reported result, test 2018–2019 |
+|---|---:|
+| ROC-AUC | **0.882** |
+| PR-AUC | **0.028** |
+| KS statistic | **0.611** |
+| Failure capture in top 5% | **52.6%** |
+
+Source: the author's [abstract and conclusion](docs/THESIS_EXCERPTS.md). These are thesis-reported values, not a new reproduction run. The notebooks use average precision for the metric labeled PR-AUC. [Results and interpretation](docs/RESULTS.md) explain the evaluation scope and available evidence.
+
+The project highlights a practical research finding: a directly interpretable nonlinear model can be more useful than a more complex neural model for these accounting data. BiLSTM contributes insight into the timing of risk signals; the abstract reports no statistically significant performance improvement over logistic regression.
 
 ## Project at a glance
 
 | Dimension | Implementation |
 |---|---|
-| Data | Slovak firm-year panel; source data described as covering 2011–2019 |
+| Data | Slovak Register of Financial Statements; firm-year panel, 2011–2019 |
+| Target | Entry into bankruptcy or restructuring in the following period, as defined in the thesis |
 | Preparation | Accounting ratios, firm characteristics, industry indicators, macroeconomic controls, lag and difference features |
 | Training | 2013–2016 |
 | Validation | 2017 |
@@ -27,7 +46,7 @@ This diploma-thesis project connects financial feature engineering, rare-event c
 | Model families | Logistic regression · EBM · BiLSTM |
 | Evaluation | ROC-AUC, average precision, calibration, threshold metrics and top-k capture |
 | Interpretation | Logit coefficients · EBM shape functions and interactions · BiLSTM SHAP analysis |
-| Public materials | Four source notebooks, thesis PDF, environment specifications and documentation |
+| Public materials | Four source notebooks, thesis PDF, reported-results summary, environment specifications and documentation |
 
 ## Three complementary approaches
 
@@ -41,11 +60,12 @@ The SHAP analysis concerns the single-seed explanatory model; it is not a direct
 
 ## Explore the evidence
 
-- **Start with the [thesis PDF](Diplomova_praca.pdf)** for the academic narrative and reported empirical findings.
+- **Start with the [results summary](docs/RESULTS.md)** for reported performance, a model comparison and an explanation of the top-5% finding.
+- **Read the [thesis PDF](Diplomova_praca.pdf)** for the academic narrative and full empirical discussion.
 - **Read the [notebooks](notebooks/README.md)** to inspect preprocessing, model fitting and evaluation code.
 - **Use the [data specification](data/README.md)** and [reproduction guide](docs/REPRODUCIBILITY.md) to prepare a local run with authorized data.
 
-The public notebooks have cleared outputs. A standalone table of verified final model metrics and selected result figures has not yet been included. Consequently, this page does not assert a winning model or publish unverified performance numbers.
+The public notebooks have cleared outputs. The supplied thesis excerpts support the EBM headline values and qualitative model comparison; exact Logit/BiLSTM scores, full uncertainty estimates and result figures are not included in those excerpts. The [results summary](docs/RESULTS.md) preserves these distinctions.
 
 ## Workflow
 
@@ -105,7 +125,9 @@ The dependency files specify version ranges, not a verified lockfile. Installing
 | [Diplomova_praca.pdf](Diplomova_praca.pdf) | Thesis |
 | [notebooks/](notebooks/) | Research implementation |
 | [data/README.md](data/README.md) | Source format and derived datasets |
-| [docs/](docs/) | Methodology, reproduction instructions and review notes |
+| [docs/RESULTS.md](docs/RESULTS.md) | Thesis-reported metrics, findings and explainability comparison |
+| [docs/thesis_reported_metrics.json](docs/thesis_reported_metrics.json) | Machine-readable values with provenance |
+| [docs/](docs/) | Source excerpts, methodology, reproduction instructions and review notes |
 | [outputs/README.md](outputs/README.md) | Generated artifact inventory |
 | [requirements.txt](requirements.txt) / [environment.yml](environment.yml) | pip / conda environment specifications |
 | [.env.example](.env.example) | Configuration reference; not automatically loaded |

@@ -2,6 +2,8 @@
 
 This directory is reserved for local model outputs, figures, diagnostics, and trained-model artefacts. Generated outputs are ignored by default and should not be committed to GitHub unless they are small, anonymized, and intended for publication.
 
+The public [thesis-reported metrics](../docs/RESULTS.md) and [JSON transcription](../docs/thesis_reported_metrics.json) are maintained under `docs/`. They are sourced from the thesis excerpts and are not generated run artifacts.
+
 Typical generated outputs include:
 
 | File or directory | Origin |

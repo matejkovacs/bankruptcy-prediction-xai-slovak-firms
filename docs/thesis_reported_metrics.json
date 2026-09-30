@@ -1,0 +1,77 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "type": "author_supplied_thesis_excerpts",
+    "document": "Metódy vysvetliteľnej umelej inteligencie v modelovaní zlyhania firiem na Slovensku",
+    "author": "Matej Kovács",
+    "year": 2026,
+    "sections": [
+      "Abstract",
+      "Conclusion",
+      "Table 19"
+    ],
+    "transcribed_on": "2026-09-30",
+    "source_record": "THESIS_EXCERPTS.md",
+    "page_numbers": null
+  },
+  "verification": {
+    "checked_against_supplied_text": true,
+    "independently_recomputed": false,
+    "original_producing_commit": null
+  },
+  "dataset": {
+    "source": "Register účtovných závierok, Slovakia",
+    "coverage_years": [
+      2011,
+      2019
+    ],
+    "test_years": [
+      2018,
+      2019
+    ],
+    "target_definition": "Entry into bankruptcy or restructuring in the following period",
+    "exact_horizon": null,
+    "test_n": null,
+    "test_positives": null,
+    "evaluation_unit_note": "Thesis wording: firms; current notebooks: firm-year rows. Original aggregation not established."
+  },
+  "metric_definition_note": "PR-AUC label preserved from thesis. Published notebook code uses sklearn.metrics.average_precision_score.",
+  "models": [
+    {
+      "model": "Logistic regression",
+      "roc_auc": null,
+      "pr_auc_reported": null,
+      "ks": null,
+      "brier_score": null,
+      "recall_at_5pct": null
+    },
+    {
+      "model": "EBM",
+      "roc_auc": 0.882,
+      "pr_auc_reported": 0.028,
+      "ks": 0.611,
+      "brier_score": null,
+      "recall_at_5pct": 0.526,
+      "calibration_state": null,
+      "confidence_intervals": null
+    },
+    {
+      "model": "BiLSTM",
+      "roc_auc": null,
+      "pr_auc_reported": null,
+      "ks": null,
+      "brier_score": null,
+      "recall_at_5pct": null
+    }
+  ],
+  "derived": [
+    {
+      "model": "EBM",
+      "metric": "capture_lift_at_5pct",
+      "value": 10.52,
+      "formula": "0.526 / 0.05",
+      "status": "derived_from_rounded_reported_values"
+    }
+  ],
+  "missing_values": "null means not supplied in the excerpts; never zero or not evaluated."
+}

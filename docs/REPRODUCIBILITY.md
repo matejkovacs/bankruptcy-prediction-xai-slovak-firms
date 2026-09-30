@@ -2,7 +2,7 @@
 
 ## What this package provides
 
-The repository provides the source implementation and thesis. Raw inputs, executed result notebooks, a tested dependency lockfile and a consolidated final metrics table are not included. Full numerical reproduction therefore requires authorized data and a verified environment.
+The repository provides the source implementation, thesis and a [summary of thesis-reported results](RESULTS.md) transcribed from author-supplied excerpts. Raw inputs, executed result notebooks, a tested dependency lockfile and a complete numerical comparison of all three models are not included. Full numerical reproduction therefore requires authorized data and a verified environment.
 
 ## 1. Prepare an environment
 

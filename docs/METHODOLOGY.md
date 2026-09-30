@@ -20,10 +20,10 @@ The notebooks label `average_precision_score` as PR-AUC in several places. Repor
 
 Ranking metrics, threshold metrics, probability calibration and top-k capture address different questions. Document whether each score uses raw or calibrated probabilities and how its threshold was chosen.
 
-## Points to resolve before asserting a final model ranking
+## Checks for reproducing the reported model ranking
 
 1. **Align the evaluation population.** Sequence-history filtering can change which observations reach BiLSTM. Compare matched `(id, rok)` rows and report the sample size and positive count for each model.
-2. **Confirm the prediction horizon.** The code consumes an existing `target`; the repository does not independently establish its event date, horizon or label-construction procedure. Verify these against the data and thesis.
+2. **Confirm the operational prediction horizon.** The supplied thesis abstract defines failure as entry into bankruptcy or restructuring in the following period. The code consumes an existing `target`; the exact period length, event-date matching and label-construction procedure still need to be recorded from the original data/methodology.
 3. **Check information availability.** Year splits alone do not prove the absence of look-ahead effects. Establish when financial statements and annual macro indicators were available.
 4. **Keep test results out of model selection.** The notebooks display test metrics for multiple candidates. Selection is described in terms of validation metrics; preserve a record demonstrating that test inspection did not drive subsequent tuning.
 5. **Account for validation reuse.** Hyperparameter selection, calibration and threshold setting reuse 2017 observations. Document this limitation; a future extension can use separate calibration data or chronological cross-fitting.
@@ -38,8 +38,8 @@ Ranking metrics, threshold metrics, probability calibration and top-k capture ad
 - BiLSTM SHAP is computed for an additional single-seed explanatory model with a one-hot industry wrapper. It should not be described as an exact explanation of the five-seed isotonic-calibrated ensemble.
 - These explanations do not establish causal effects.
 
-## Results to publish
+## Results and remaining evidence
 
-A compact portfolio result package should include a verified metric table with model/version, split, sample size, positive count, calibration state, ROC-AUC, AP, Brier score and a common top-k capture rate. Add a PR curve, an EBM shape-function example and a clearly labeled SHAP figure. Reference the exact thesis table/page and producing commit for each item.
+The [results page](RESULTS.md) now includes the thesis-reported EBM metrics and a Table 19-based explainability comparison. A complete reproduction package should additionally record model/version, sample size, positive count, calibration state, ROC-AUC, AP, Brier score and a common top-k capture rate for all three models. Add the original PR curve, an EBM shape-function example and a clearly labeled SHAP figure. Reference the exact thesis table/page and producing commit for each item.
 
-No numerical values are supplied here because the checked public notebooks contain no saved evaluation outputs and the thesis text was not accessible during this maintenance review.
+The source excerpts establish what the thesis reports; they do not establish a fresh model run. Table 19's reference to an EBM five-seed ensemble differs from the published code's five-seed feature-stability assessment. See the [implementation distinctions](RESULTS.md#implementation-distinctions) before describing either model's ensemble or explanations.

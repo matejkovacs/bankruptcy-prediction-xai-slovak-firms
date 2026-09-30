@@ -1,6 +1,6 @@
 # Source data and file format
 
-Raw data are not included. Use an authorized copy of the original source panel. The code expects observations described as covering 2011–2019.
+Raw data are not included. The [thesis abstract](../docs/THESIS_EXCERPTS.md) identifies the source as Slovakia's Register of Financial Statements (Register účtovných závierok), covering 2011–2019. Use an authorized copy of the original source panel; a generic export may not match its construction or schema.
 
 ## Parser contract
 
@@ -66,7 +66,7 @@ A CSV with one ordinary header row will lose observations under this parser. Ada
 
 The import treats `id`, `sk_nace`, `pravna_forma` and `datum_vzniku` as text-like fields and coerces other fields to numeric. Later code may cast identifiers to integers. Verify identifier compatibility, unique `(id, rok)` pairs, valid years and binary targets before execution. Industry handling in notebook 00 expects textual category names.
 
-The source supplies `target`; its event definition and prediction horizon must be documented from the original data/thesis. Do not infer these solely from the column name.
+The thesis defines failure as entry into bankruptcy or restructuring in the following period. The source supplies `target`; the excerpts do not specify the exact period length, event-date matching or label-construction procedure. Record these operational details from the original data/methodology before reproduction.
 
 ## Generated datasets
 
