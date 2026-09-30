@@ -1,3 +1,5 @@
+> **Historical audit.** This report predates the 2026-09-30 review. Its checkboxes describe the earlier preparation process, not independent evidence of the current repository state or successful model execution. See [the current review](PORTFOLIO_REVIEW.md) and [reproduction guide](REPRODUCIBILITY.md).
+
 # Notebook audit before GitHub upload
 
 Audited notebooks:

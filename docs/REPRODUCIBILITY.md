@@ -1,42 +1,75 @@
-# Reproducibility notes
+# Reproducing the workflow
 
-## 1. Running the pipeline from a clean environment
+## What this package provides
 
-1. Create a Python environment using either `requirements.txt` or `environment.yml`.
-2. Place `firmy_dataset.csv` in the repository root, or set the `DATA_DIR` environment variable.
-3. Run the notebooks in the following order:
-   - `00_data_preparation.ipynb`,
-   - `01_logit_benchmark.ipynb`,
-   - `03_ebm_pipeline.ipynb`,
-   - `04_bilstm_pipeline.ipynb`.
+The repository provides the source implementation and thesis. Raw inputs, executed result notebooks, a tested dependency lockfile and a consolidated final metrics table are not included. Full numerical reproduction therefore requires authorized data and a verified environment.
 
-## 2. Out-of-time split
+## 1. Prepare an environment
 
-All models use the same out-of-time validation design:
+From the repository root, use the pip instructions in [README](../README.md), or:
 
-| Split | Years |
-|---|---:|
-| Train | 2013–2016 |
-| Validation | 2017 |
-| Test | 2018–2019 |
+```bash
+conda env create -f environment.yml
+conda activate bankruptcy-xai
+python -m jupyterlab
+```
 
-This split prevents look-ahead bias by ensuring that future observations do not enter training or hyperparameter selection.
+The conda file selects Python 3.10. Dependency ranges are not a record of the exact thesis runtime. In particular, the BiLSTM uses Keras API features such as `LSTM(use_cudnn=False)`; the declared TensorFlow lower bound should not be treated as a verified compatibility guarantee. Validate the chosen TensorFlow/Keras combination before starting the expensive model search. After a successful run, preserve `python -m pip freeze` and hardware details with the run record.
 
-## 3. Imputation and winsorization
+## 2. Supply the source file
 
-- Winsorization thresholds are computed only from the training years.
-- Missing values are handled separately for each model-specific dataset.
-- The EBM dataset uses the technical value `-999` for missing values.
-- The BiLSTM dataset first converts infinite values to `NaN` and then applies training-median imputation, with fallback values where necessary.
+Place `firmy_dataset.csv` in the repository root, or set `DATA_DIR` to an absolute directory containing it. Follow the [input format](../data/README.md): a generic CSV with a single header row is not a drop-in replacement.
 
-## 4. Random seeds
+Default local path resolution works when the notebook kernel starts in the repository root or `notebooks/`. Launching Jupyter from the root does not by itself guarantee the kernel working directory.
 
-The main random seed is `42`. The BiLSTM pipeline uses a multi-seed ensemble. Small numerical differences may occur across hardware backends, TensorFlow versions, and CPU/GPU settings.
+Linux / macOS:
 
-## 5. Large artefacts
+```bash
+export DATA_DIR="/absolute/path/to/data"
+python -m jupyterlab
+```
 
-CSV datasets, pickle payloads, trained models, checkpoints, SHAP outputs, and generated figures are treated as derived artefacts rather than source code. They are ignored through `.gitignore`.
+Windows PowerShell:
 
-## 6. License and data scope
+```powershell
+$env:DATA_DIR = "C:\path\to\data"
+python -m jupyterlab
+```
 
-The MIT License applies to the repository code, notebooks, and documentation. It does not apply to the raw financial dataset, generated datasets, model artefacts, or third-party data sources.
+Set these variables before launching the kernel; restart an existing kernel after changes. `.env.example` is a reference, not an automatic configuration loader.
+
+For BiLSTM, precedence is `BASE_DIR` → `DATA_DIR` → local repository root. In Colab, the final fallback remains `/content/drive/MyDrive/BILSTM` after mounting Drive. Use the same data directory across all four notebooks unless deliberately copying their inputs.
+
+## 3. Execute in order
+
+1. [00_data_preparation.ipynb](../notebooks/00_data_preparation.ipynb)
+2. [01_logit_benchmark.ipynb](../notebooks/01_logit_benchmark.ipynb)
+3. [03_ebm_pipeline.ipynb](../notebooks/03_ebm_pipeline.ipynb)
+4. [04_bilstm_pipeline.ipynb](../notebooks/04_bilstm_pipeline.ipynb)
+
+Use a fresh kernel for each notebook and run all cells in order. Preparation exports four CSV files; models consume their corresponding exports. Outputs are written beside inputs, with BiLSTM-specific files under `BASE_DIR/bilstm_v8/`. The repository `outputs/` directory is documentation and is not automatically used by every notebook.
+
+## 4. Record the experiment
+
+| Item | Record |
+|---|---|
+| Source | Exact Git commit and input-file checksum |
+| Data | Provenance, target definition, horizon, extraction date and reporting availability |
+| Population | Filters, row counts, unique firms and positives for every split/model |
+| Runtime | Python, installed dependencies, operating system, CPU/GPU |
+| Configuration | SME filter mode, features, hyperparameters and seeds |
+| Evaluation | Raw/calibrated probabilities, thresholds, metrics and uncertainty method |
+
+Split years are train **2013–2016**, validation **2017**, test **2018–2019**. The common seed is **42**; BiLSTM uses **42, 7, 1337, 2025, 99**. Hardware and dependency differences may change results.
+
+Chronological splitting is only one part of leakage control. Confirm target timing and feature availability, and compare models on aligned firm-year observations. See [methodology](METHODOLOGY.md).
+
+## 5. Public verification
+
+The repository check compiles notebook code cells and verifies that saved outputs remain cleared. It does not execute models, validate dependency compatibility or certify the empirical results.
+
+```bash
+python scripts/check_notebooks.py
+```
+
+Derived data and models are excluded by [.gitignore](../.gitignore). Ignore rules protect future untracked files; they do not remove anything already committed. Publish only reviewed aggregate tables and figures with explicit provenance.

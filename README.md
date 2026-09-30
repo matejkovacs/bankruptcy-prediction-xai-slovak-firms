@@ -1,140 +1,122 @@
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20029429.svg)](https://doi.org/10.5281/zenodo.20029429)
-
 # Bankruptcy Prediction with Explainable AI
 
-This repository contains the reproducible research pipeline for a diploma thesis focused on predicting the failure of Slovak firms using three model classes:
+**An empirical comparison of econometric, interpretable machine-learning and deep-learning approaches on Slovak firm data.**
 
-1. a transparent econometric logistic-regression benchmark,
-2. an Explainable Boosting Machine (EBM),
-3. a sequential BiLSTM model with post-hoc SHAP interpretation.
+[Read the thesis](Diplomova_praca.pdf) · [Explore the notebooks](notebooks/README.md) · [Reproduce the workflow](docs/REPRODUCIBILITY.md) · [Slovenský prehľad](docs/PREHLAD_SK.md)
 
-The purpose of the repository is to make the empirical workflow reproducible without publishing the underlying raw financial dataset.
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20029429.svg)](https://doi.org/10.5281/zenodo.20029429)
+[![Code license: MIT](https://img.shields.io/badge/code_license-MIT-blue.svg)](LICENSE)
 
-## Repository structure
+## Research question
 
-```text
-.
-├── 00_data_preparation.ipynb        # data preparation and model-ready CSV exports
-├── 01_logit_benchmark.ipynb         # strict econometric logistic-regression benchmark
-├── 03_ebm_pipeline.ipynb            # Explainable Boosting Machine pipeline
-├── 04_bilstm_pipeline.ipynb         # BiLSTM + focal loss + SHAP pipeline
-├── data/README.md                   # expected input data and generated datasets
-├── outputs/README.md                # local output artefacts and ignored files
-├── docs/                            # reproducibility notes and notebook audit report
-├── requirements.txt                 # Python dependencies for pip
-├── environment.yml                  # optional conda environment
-├── .env.example                     # example environment-variable configuration
-├── .gitignore                       # files intentionally excluded from Git
-├── .gitattributes                   # line-ending normalization
-└── LICENSE                          # MIT License for code and notebooks
-```
+How do logistic regression, an Explainable Boosting Machine (EBM), and a bidirectional LSTM compare when identifying firm failure from financial statements and firm histories?
 
-## Notebook execution order
+This diploma-thesis project connects financial feature engineering, rare-event classification, chronological evaluation, probability calibration, and model interpretation. It examines both predictive ranking and how a model's predictions can be explained.
 
-Run the notebooks in the following order:
+**Author:** Matej Kovacs · **Institution:** University of Economics in Bratislava (EUBA) · **Year:** 2026
 
-1. `00_data_preparation.ipynb`  
-   Loads the raw firm-year panel, creates financial ratios, non-financial features, macroeconomic controls, SME/activity filters, winsorized variables, lag/difference features, and model-specific CSV exports.
+## Project at a glance
 
-2. `01_logit_benchmark.ipynb`  
-   Uses `data_logit_strict.csv` and estimates the transparent econometric logistic-regression benchmark.
-
-3. `03_ebm_pipeline.ipynb`  
-   Uses `data_ebm.csv` and estimates the Explainable Boosting Machine, including sampling-strategy comparison, hyperparameter tuning, Platt calibration, top-k analysis, and model interpretation.
-
-4. `04_bilstm_pipeline.ipynb`  
-   Uses `data_rnn.csv`, builds the sequential firm-year panel, trains the BiLSTM model with focal loss and balanced batches, and produces SHAP-based interpretation outputs.
-
-## Input data
-
-The raw dataset is **not included** in this repository.
-
-Before running the pipeline, place the raw input file in the repository root or configure the path through environment variables:
-
-```text
-firmy_dataset.csv
-```
-
-The expected input is a firm-year panel covering Slovak firms, accounting variables, firm identifiers, year, target variable, industry information, legal form, firm age information, and other variables required to compute the financial ratios used in the notebooks. See `data/README.md` for details.
-
-## Generated files
-
-The notebooks generate intermediate datasets and model artefacts such as:
-
-```text
-data_logit.csv
-data_logit_strict.csv
-data_ebm.csv
-data_rnn.csv
-logit_v7_results.pkl
-logit_v7_results.json
-results_ebm.pkl
-ebm_v7_results.pkl
-ebm_v5_results.pkl
-bilstm_v7_results.pkl
-bilstm_v8/
-```
-
-These files are intentionally excluded through `.gitignore`, because they are derived from the raw data, can be large, and are not required as source files for the public repository.
-
-## Environment setup
-
-### Option A: pip
-
-```bash
-python -m venv .venv
-source .venv/bin/activate      # Linux/macOS
-# .venv\Scripts\activate       # Windows
-pip install --upgrade pip
-pip install -r requirements.txt
-```
-
-### Option B: conda
-
-```bash
-conda env create -f environment.yml
-conda activate bankruptcy-xai
-```
-
-## Configuration
-
-The notebooks are prepared to work from the repository root. If the data files are stored elsewhere, set the environment variables shown in `.env.example`:
-
-```bash
-DATA_DIR=/path/to/data
-BASE_DIR=/path/to/data_and_outputs
-```
-
-## Reproducibility notes
-
-The empirical workflow uses an out-of-time split:
-
-| Dataset split | Years |
-|---|---:|
-| Train | 2013–2016 |
+| Dimension | Implementation |
+|---|---|
+| Data | Slovak firm-year panel; source data described as covering 2011–2019 |
+| Preparation | Accounting ratios, firm characteristics, industry indicators, macroeconomic controls, lag and difference features |
+| Training | 2013–2016 |
 | Validation | 2017 |
 | Test | 2018–2019 |
+| Model families | Logistic regression · EBM · BiLSTM |
+| Evaluation | ROC-AUC, average precision, calibration, threshold metrics and top-k capture |
+| Interpretation | Logit coefficients · EBM shape functions and interactions · BiLSTM SHAP analysis |
+| Public materials | Four source notebooks, thesis PDF, environment specifications and documentation |
 
-The main random seed is `42`. Some deep-learning steps may still show minor numerical differences across CPU/GPU environments.
+## Three complementary approaches
 
-Further reproducibility details are provided in `docs/REPRODUCIBILITY.md`.
+| Model | Role | Implemented techniques | Interpretation |
+|---|---|---|---|
+| **Logistic regression** | Econometric benchmark | Feature screening, collinearity and rank checks, model diagnostics | Coefficients and odds ratios |
+| **EBM** | Interpretable nonlinear model | Sampling-strategy comparison, Optuna tuning, sigmoid calibration on validation probabilities | Additive shape functions and pairwise interactions |
+| **BiLSTM** | Model of firm histories | Four-step windows, two recurrent layers, industry embedding, temporal attention, focal loss, balanced batches, five-seed ensemble and isotonic calibration | SHAP for a separately retrained explanatory model |
 
-## Data availability
+The SHAP analysis concerns the single-seed explanatory model; it is not a direct explanation of the complete calibrated ensemble. Details and evaluation caveats are in the [methodology guide](docs/METHODOLOGY.md).
 
-The raw financial dataset is not part of this repository. The repository only contains source code, notebooks, and documentation needed to reproduce the empirical pipeline if the user has legitimate access to the required input data.
+## Explore the evidence
 
-## License
+- **Start with the [thesis PDF](Diplomova_praca.pdf)** for the academic narrative and reported empirical findings.
+- **Read the [notebooks](notebooks/README.md)** to inspect preprocessing, model fitting and evaluation code.
+- **Use the [data specification](data/README.md)** and [reproduction guide](docs/REPRODUCIBILITY.md) to prepare a local run with authorized data.
 
-The source code, notebooks, and documentation in this repository are released under the MIT License. See `LICENSE`.
+The public notebooks have cleared outputs. A standalone table of verified final model metrics and selected result figures has not yet been included. Consequently, this page does not assert a winning model or publish unverified performance numbers.
 
-The raw financial dataset, generated model artefacts, exported CSV files, trained model checkpoints, and any third-party data sources are **not included** in this repository and are **not covered** by the MIT License unless explicitly stated by their respective owners.
+## Workflow
 
-## Academic use
+```mermaid
+flowchart TD
+    A["Firm-year panel"] --> B["Preparation and feature engineering"]
+    B --> C["Logistic regression"]
+    B --> D["Explainable Boosting Machine"]
+    B --> E["BiLSTM firm histories"]
+    C --> F["Chronological evaluation and interpretation"]
+    D --> F
+    E --> F
+```
 
-This repository is intended as a reproducibility package for academic research. The models and outputs are not intended to be used as standalone financial, legal, or investment advice.
+| Order | Notebook | Main input |
+|---|---|---|
+| 1 | [Data preparation](notebooks/00_data_preparation.ipynb) | `firmy_dataset.csv` |
+| 2 | [Logistic benchmark](notebooks/01_logit_benchmark.ipynb) | `data_logit_strict.csv` |
+| 3 | [EBM pipeline](notebooks/03_ebm_pipeline.ipynb) | `data_ebm.csv` |
+| 4 | [BiLSTM pipeline](notebooks/04_bilstm_pipeline.ipynb) | `data_rnn.csv` |
 
-## Citation
+Run preparation first; the three model notebooks then use its exports independently. Notebook numbering preserves the original research sequence; there is no required notebook `02` in this package.
 
-If you use this repository, please cite it as:
+## Get started
 
-Kovacs, M. (2026). *XAI Pipelines for Bankruptcy Prediction of Slovak Firms* (Version 1.0.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.20029429
+Source data are not distributed. Reading the thesis, code and documentation requires no local setup.
+
+To run the notebooks with authorized data, clone the repository and create an environment:
+
+```bash
+git clone https://github.com/matejkovacs/bankruptcy-prediction-xai-slovak-firms.git
+cd bankruptcy-prediction-xai-slovak-firms
+python -m venv .venv
+```
+
+Activate the environment:
+
+| Platform | Command |
+|---|---|
+| Windows PowerShell | `.venv\Scripts\Activate.ps1` |
+| Linux / macOS | `source .venv/bin/activate` |
+
+```bash
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+python -m jupyterlab
+```
+
+Place `firmy_dataset.csv` in the repository root, then open the notebooks in the order above. Alternatively, export `DATA_DIR` before launching Jupyter. BiLSTM also supports `BASE_DIR`. See [configuration and environment limitations](docs/REPRODUCIBILITY.md).
+
+The dependency files specify version ranges, not a verified lockfile. Installing the environment alone does not establish that the thesis results have been reproduced.
+
+## Repository guide
+
+| Location | Contents |
+|---|---|
+| [Diplomova_praca.pdf](Diplomova_praca.pdf) | Thesis |
+| [notebooks/](notebooks/) | Research implementation |
+| [data/README.md](data/README.md) | Source format and derived datasets |
+| [docs/](docs/) | Methodology, reproduction instructions and review notes |
+| [outputs/README.md](outputs/README.md) | Generated artifact inventory |
+| [requirements.txt](requirements.txt) / [environment.yml](environment.yml) | pip / conda environment specifications |
+| [.env.example](.env.example) | Configuration reference; not automatically loaded |
+| [CITATION.cff](CITATION.cff) | Machine-readable software citation |
+
+## Reuse and citation
+
+The repository's existing [MIT license](LICENSE) covers the code, notebooks and documentation as described in this package. Raw data, derived datasets and model artifacts are not distributed under that license. See the [data notes](data/README.md).
+
+For the archived software version, use the existing citation:
+
+> Kovacs, M. (2026). *XAI Pipelines for Bankruptcy Prediction of Slovak Firms* (Version 1.0.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.20029429
+
+The GitHub default branch may contain later maintenance changes. Record the exact commit when referring to a particular implementation. This is a research project; deployment performance has not been established.

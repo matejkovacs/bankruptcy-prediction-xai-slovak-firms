@@ -1,41 +1,83 @@
-# Data directory
+# Source data and file format
 
-This directory documents the expected input files and generated datasets. The actual data files are not included in the repository.
+Raw data are not included. Use an authorized copy of the original source panel. The code expects observations described as covering 2011–2019.
 
-## Expected raw input
+## Parser contract
 
-Before running `00_data_preparation.ipynb`, the following raw input file must be available either in the repository root or in the directory specified by `DATA_DIR`:
+Notebook 00 reads `firmy_dataset.csv` with:
 
-```text
-firmy_dataset.csv
-```
+- comma delimiter (the pandas default);
+- **three leading rows skipped** using `skiprows=3`;
+- **48 positional columns**, assigned the names below;
+- attempted encodings: UTF-8 with BOM, UTF-8, CP1250, Latin-1.
 
-The notebook expects a firm-year panel for the period 2011–2019. The dataset should contain at least:
+A CSV with one ordinary header row will lose observations under this parser. Adapt the import explicitly for a different format. Confirm the delimiter, column order, units and number of skipped rows before fitting models.
 
-- firm identifier `id`,
-- observation year `rok`,
-- binary target variable `target`,
-- industry code/category `sk_nace`,
-- number of employees,
-- legal form,
-- firm incorporation date,
-- accounting items from the balance sheet and profit-and-loss statement needed to compute the financial ratios.
-
-## Generated model-ready datasets
-
-`00_data_preparation.ipynb` exports the following derived datasets:
-
-| File | Purpose |
+| Position | Column |
 |---|---|
-| `data_logit.csv` | input dataset for logistic regression |
-| `data_logit_strict.csv` | strict/alias input for the logistic benchmark |
-| `data_ebm.csv` | input dataset for the Explainable Boosting Machine |
-| `data_rnn.csv` | input dataset for the BiLSTM sequence model |
-| `logit_train_medians.pkl` | training medians used for logit-dataset imputation |
-| `rnn_train_medians.pkl` | training medians used for RNN-dataset imputation |
+| 1 | `id` |
+| 2 | `rok` |
+| 3 | `target` |
+| 4 | `sk_nace` |
+| 5 | `pocet_zamestnancov` |
+| 6 | `pravna_forma` |
+| 7 | `celkove_aktiva` |
+| 8 | `dlhodoby_nehmotny_majetok` |
+| 9 | `dlhodoby_hmotny_majetok` |
+| 10 | `obezne_aktiva` |
+| 11 | `zasoby` |
+| 12 | `obchodne_pohladavky` |
+| 13 | `peniaze` |
+| 14 | `vlastne_imanie` |
+| 15 | `zakladne_imanie` |
+| 16 | `nerozdeleny_zisk` |
+| 17 | `celkove_zavazky` |
+| 18 | `dlhodobe_zavazky` |
+| 19 | `dlhodobe_obch_zavazky` |
+| 20 | `dlhodobe_danove_dlhy` |
+| 21 | `kratkodobe_zavazky` |
+| 22 | `obchodne_zavazky` |
+| 23 | `kratkodobe_danove_dlhy` |
+| 24 | `kratkodobe_financne_vypomoci` |
+| 25 | `bankove_uvery_dlhodobe` |
+| 26 | `bankove_uvery_kratkodobe` |
+| 27 | `celkove_trzby` |
+| 28 | `trzby_spolu` |
+| 29 | `odpisy` |
+| 30 | `vysledok_hospodarenia_z_hospodarskej_cinnosti` |
+| 31 | `trzby_z_predaja_cennych_papierov_a_podielov` |
+| 32 | `predane_cenne_papiere_a_podiely` |
+| 33 | `vynosy_z_dhodobeho_financneho_majetku` |
+| 34 | `vynosy_z_kratkodobeho_financneho_majetku` |
+| 35 | `naklady_na_kratkodoby_financny_majetok` |
+| 36 | `vynosy_z_precenenia_cennych_papierov_a_vynosy_z_derivatovych_operacii` |
+| 37 | `naklady_na_precenenie_cennych_papierov_a_naklady_na_derivatove_operacie` |
+| 38 | `tvorba_a_zauctovanie_opravnych_poloziek_k_financnemu_majetku` |
+| 39 | `vynosove_uroky` |
+| 40 | `nakladove_uroky` |
+| 41 | `kurzove_zisky` |
+| 42 | `kurzove_straty` |
+| 43 | `ostatne_vynosy_z_financnej_cinnosti` |
+| 44 | `ostatne_naklady_na_financnu_cinnost` |
+| 45 | `celkove_dane` |
+| 46 | `ebt` |
+| 47 | `cisty_zisk_strata` |
+| 48 | `datum_vzniku` |
 
-These files are generated from the raw input data and are therefore excluded from Git through `.gitignore`.
+The import treats `id`, `sk_nace`, `pravna_forma` and `datum_vzniku` as text-like fields and coerces other fields to numeric. Later code may cast identifiers to integers. Verify identifier compatibility, unique `(id, rok)` pairs, valid years and binary targets before execution. Industry handling in notebook 00 expects textual category names.
 
-## Data licensing note
+The source supplies `target`; its event definition and prediction horizon must be documented from the original data/thesis. Do not infer these solely from the column name.
 
-The MIT License in this repository applies only to the source code, notebooks, and documentation. It does not apply to the raw dataset or to generated data files derived from it.
+## Generated datasets
+
+| File | Consumer |
+|---|---|
+| `data_logit.csv` / `data_logit_strict.csv` | Logistic-regression benchmark; compatibility exports |
+| `data_ebm.csv` | EBM |
+| `data_rnn.csv` | BiLSTM |
+| `logit_train_medians.pkl` | Logit preparation provenance |
+| `rnn_train_medians.pkl` | RNN preparation provenance |
+
+Files are written to `DATA_DIR`, defaulting locally to the repository root. These derived files are ignored by Git.
+
+The repository's MIT license does not grant rights to the source dataset or generated data. Record source provenance and access terms independently.

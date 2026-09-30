@@ -1,0 +1,42 @@
+# Local environments and configuration
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db
+
+# Private input data and derived tabular exports, wherever notebooks run
+*.csv
+*.tsv
+*.parquet
+*.feather
+*.xlsx
+*.xls
+
+# Trained models, serialized results and checkpoints
+*.pkl
+*.pickle
+*.joblib
+*.h5
+*.hdf5
+*.keras
+*.ckpt*
+*.weights.h5
+checkpoint
+bilstm_v8/
+saved_model/
+logs/
+
+# Current notebook figure / compact-result exports
+ebm_results.png
+ebm_shape_functions.png
+logit_v7_results.json
+
+# Local output directory; reviewed publication assets belong in docs/figures/
+outputs/*
+!outputs/README.md
